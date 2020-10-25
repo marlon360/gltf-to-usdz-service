@@ -50,6 +50,8 @@ On success you receive this response:
 
 ### Docker Compose
 
+In `examples/docker-webservice-local-convert` you can see an example of a NodeJS webserver that uses the `gltf-to-usdz-service` with a docker-compose network.
+
 ```
 version: "3.8"
 services:
