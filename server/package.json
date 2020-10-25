@@ -1,0 +1,23 @@
+{
+  "name": "gltf-to-usdz-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/marlon360/gltf-to-usdz-service.git"
+  },
+  "author": "Marlon Lückert",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/marlon360/gltf-to-usdz-service/issues"
+  },
+  "homepage": "https://github.com/marlon360/gltf-to-usdz-service#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "express": "^4.17.1"
+  }
+}
