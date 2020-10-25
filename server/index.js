@@ -30,5 +30,5 @@ app.post('/local-convert', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`USDZ Converter Server running at http://localhost:${port}`)
 })
