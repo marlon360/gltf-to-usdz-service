@@ -27,7 +27,7 @@ Start the server:
 
 #### Convert a local file
 
-Send a `POST` request to the server (localhost:8080) with this body:
+Send a `POST` request to the endpoint `/local-convert` (here: *localhost:8080/local-convert*) with this body:
 
 ```
 {
