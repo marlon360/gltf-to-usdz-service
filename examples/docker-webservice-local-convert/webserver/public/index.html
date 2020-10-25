@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USDZ local converter demo</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>USDZ local converter demo</h1>
+    <button id="convert-button">Convert File</button>
+    <p class="hidden" id="loading-text">Converting file...</p>
+</body>
+<script>
+    const loadingText = document.getElementById("loading-text");
+    const button = document.getElementById("convert-button");
+    button.addEventListener('click', () => {
+        loadingText.classList.remove("hidden");
+        fetch('/local-convert', {
+            headers: {
+                'Accept': '*/*',
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({
+                filename: "Astronaut.glb"
+            })
+        }).then(function(response) {
+            return response.json();
+        }).then((result) => {
+            console.log(result);
+            loadingText.classList.add("hidden");
+            if (result.success) {
+                alert("Successfully converted!");
+            } else {
+                alert("Something went wrong.");
+            }
+        });
+    })
+</script>
+</html>

@@ -1,0 +1,10 @@
+version: "3.8"
+services:
+  webserver:
+    build: webserver/
+    ports:
+      - "8080:8080"
+  gltf-to-usdz-service:
+    image: marlon360/gltf-to-usdz-service:latest
+    volumes:
+      - ./webserver/public/static_files:/usr/app
