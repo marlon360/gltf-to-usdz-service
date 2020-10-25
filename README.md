@@ -45,3 +45,22 @@ On success you receive this response:
     "filename": "inputfile.usdz"
 }
 ```
+
+## Examples
+
+### Docker Compose
+
+```
+version: "3.8"
+services:
+  webserver:
+    build: webserver/
+    ports:
+      - "8080:8080"
+  gltf-to-usdz-service:
+    image: marlon360/gltf-to-usdz-service:latest
+    volumes:
+      - ./webserver/public/static_files:/usr/app
+```
+
+With this compose file you can send a POST request from *webserver* to `http://gltf-to-usdz-service:3000/local-convert` to convert a `.gltf` located in `./webserver/public/static_files`.
