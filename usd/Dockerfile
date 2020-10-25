@@ -1,5 +1,5 @@
 
-FROM python:3.7.9-slim-buster
+FROM python:2-slim-buster
 
 # the release tag of the usd repository
 ENV USD_VERSION="20.11"
