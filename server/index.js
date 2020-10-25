@@ -8,7 +8,11 @@ const port = 3000
 app.use(bodyParser.json());
 
 app.post('/local-convert', (req, res) => {
-  const { filename } = req.body;
+  const filename = req.body.filename;
+  if (filename == null) {
+    res.send({error: "No filename defined in the request"});
+    return;
+  }
   if(isMainThread){
 
     let thread = new Worker('./threads/converter_thread.js',{ workerData : { filename : filename } });
