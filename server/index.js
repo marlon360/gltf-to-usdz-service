@@ -1,6 +1,6 @@
-const { Worker, isMainThread, workerData } = require('worker_threads');
-const { exec } = require("child_process");
+const { Worker, isMainThread } = require('worker_threads');
 const express = require('express')
+const path = require('path')
 const bodyParser = require('body-parser');
 const app = express()
 const port = 3000
@@ -15,14 +15,14 @@ app.post('/local-convert', (req, res) => {
   }
   if(isMainThread){
 
-    let thread = new Worker('./threads/converter_thread.js',{ workerData : { filename : filename } });
+    let thread = new Worker(path.resolve(__dirname, 'threads/converter_thread.js'), { workerData : { filename : filename } });
 
     thread.on('message',(data) => {
       res.send(data);
     })
 
     thread.on("error",(err) => {
-      res.send({error: error});
+      res.send({error: err});
     })
 
     thread.on('exit',(code) => {
