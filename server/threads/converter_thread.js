@@ -2,23 +2,32 @@ const { exec } = require("child_process");
 const { workerData, parentPort } = require("worker_threads");
 const path = require('path');
 
-convertFile(workerData.filename).then((filename) => {
-    parentPort.postMessage({ success: true, filename: filename })
+convertFile(workerData.filename).then((outputPath) => {
+    parentPort.postMessage({ success: true, outputPath: outputPath })
 }).catch((error) => {
     parentPort.postMessage({ success: false, error: error })
 });
 
 function convertFile(filepath) {
+    // absolute paths are not allowed
     if (path.isAbsolute(filepath)) {
         reject("Absolute paths are not allowed!");
         return;
     }
-    const filename = path.basename(filepath);
-    const nameWithoutExtension = filename.split('.').slice(0, -1).join('.');
-    const dirname = path.dirname(filepath);
+
+    // construct absolute path by adding the working dir
+    const absolutePath = path.normalize(`/usr/app/${filepath}`);
+
+    // check if path is outside of working dir
+    if (!absolutePath.startsWith("/usr/app/")) {
+        reject("You are trying to access a path outside of the working directory");
+        return;
+    }
+    const filename = path.parse(absolutePath).name;
+    const dirname = path.dirname(absolutePath);
     const tmpFolder = randomString();
     return new Promise((resolve, reject) => {
-        exec(`usd_from_gltf /usr/app/${filepath} /usr/app/${tmpFolder}/${nameWithoutExtension}.usdz && mv /usr/app/${tmpFolder}/${nameWithoutExtension}.usdz /usr/app/${dirname} && rmdir /usr/app/${tmpFolder}`, (error, stdout, stderr) => {
+        exec(`usd_from_gltf ${absolutePath} /usr/app/${tmpFolder}/${filename}.usdz && mv /usr/app/${tmpFolder}/${filename}.usdz ${dirname} && rmdir /usr/app/${tmpFolder}`, (error, stdout, stderr) => {
         if (error) {
             reject(error.message);
             return;
@@ -27,7 +36,7 @@ function convertFile(filepath) {
             reject(stderr);
             return;
         }
-        resolve(`${nameWithoutExtension}.usdz`);
+        resolve(path.relative("/usr/app/", `${dirname}/${filename}.usdz`));
         });
     })
 }
