@@ -22,12 +22,12 @@ app.post('/local-convert', (req, res) => {
     })
 
     thread.on("error",(err) => {
-      res.send({error: err});
+      res.send({success: false, error: err});
     })
 
     thread.on('exit',(code) => {
         if(code != 0) {
-          res.send({error: code});
+          console.log("Worker Thread exited with code: " + code);
         }
     })   
   }
