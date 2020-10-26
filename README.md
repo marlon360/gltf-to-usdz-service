@@ -67,17 +67,21 @@ Run this example by executing `docker-compose up --build` in `examples/docker-no
 
 ```
 version: "3.8"
+
+volumes:
+  uploaded_files:
+
 services:
   webserver:
     build: webserver/
     ports:
       - "8080:8080"
     volumes:
-      - ./webserver/uploads:/usr/src/app/uploads
+      - uploaded_files:/usr/src/app/uploads
   gltf-to-usdz-service:
     image: marlon360/gltf-to-usdz-service:latest
     volumes:
-      - ./webserver/uploads:/usr/app
+      - uploaded_files:/usr/app
 ```
 
 The *webserver* service is a NodeJS server, which runs a frontend and has an API endpoint for uploading and converting files.
