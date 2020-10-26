@@ -42,15 +42,24 @@ On success you receive this response:
 ```
 {
     "success": true,
-    "filename": "inputfile.usdz"
+    "outputPath": "inputfile.usdz"
+}
+```
+
+On failure you receive this response:
+
+```
+{
+    "success": false,
+    "error": "Error Message"
 }
 ```
 
 ## Examples
 
-### Docker Compose
+### Docker Compose setup with a NodeJS server
 
-In `examples/docker-webservice-local-convert` you can see an example of a NodeJS webserver that uses the `gltf-to-usdz-service` with a docker-compose network.
+In `examples/docker-nodejs` you can see an example of a NodeJS webserver that uses the `gltf-to-usdz-service` with a docker-compose network.
 
 ```
 version: "3.8"
@@ -59,10 +68,17 @@ services:
     build: webserver/
     ports:
       - "8080:8080"
+    volumes:
+      - ./webserver/uploads:/usr/src/app/uploads
   gltf-to-usdz-service:
     image: marlon360/gltf-to-usdz-service:latest
     volumes:
-      - ./webserver/public/static_files:/usr/app
+      - ./webserver/uploads:/usr/app
 ```
 
-With this compose file you can send a POST request from *webserver* to `http://gltf-to-usdz-service:3000/local-convert` to convert a `.gltf` located in `./webserver/public/static_files`.
+The *webserver* service is a NodeJS server, which runs a frontend and has an API endpoint for uploading and converting files.
+The API uses the *gltf-to-usdz-service* service to convert the uploaded file to `.usdz`. 
+
+This is possible by sending a POST request to `http://gltf-to-usdz-service:3000/local-convert` to convert a `.gltf` located in `./webserver/uploads/`.
+
+You can see that the uploads directory is shared by the *webserver* and the *gltf-to-usdz-service* to access the uploaded files.
