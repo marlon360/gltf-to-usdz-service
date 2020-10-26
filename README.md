@@ -61,6 +61,10 @@ On failure you receive this response:
 
 In `examples/docker-nodejs` you can see an example of a NodeJS webserver that uses the `gltf-to-usdz-service` with a docker-compose network.
 
+Run this example by executing `docker-compose up --build` in `examples/docker-nodejs`.
+
+#### Explanation
+
 ```
 version: "3.8"
 services:
