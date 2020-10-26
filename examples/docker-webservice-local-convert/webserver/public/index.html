@@ -4,42 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USDZ local converter demo</title>
-    <style>
-        .hidden {
-            display: none;
-        }
-    </style>
 </head>
 <body>
     <h1>USDZ local converter demo</h1>
-    <button id="convert-button">Convert File</button>
-    <p class="hidden" id="loading-text">Converting file...</p>
+
+    <form action="/convert" enctype="multipart/form-data" id="form" method="post">
+        <div class="form-group">
+          <input type="file" id="uploaded_file" class="form-control-file" name="uploaded_file">
+          <input type="submit" value="Convert!" class="btn btn-default">            
+        </div>
+    </form>
+
 </body>
 <script>
-    const loadingText = document.getElementById("loading-text");
-    const button = document.getElementById("convert-button");
-    button.addEventListener('click', () => {
-        loadingText.classList.remove("hidden");
-        fetch('/local-convert', {
-            headers: {
-                'Accept': '*/*',
-                'Content-Type': 'application/json'
-            },
-            method: 'POST',
-            body: JSON.stringify({
-                filename: "Astronaut.glb"
-            })
-        }).then(function(response) {
-            return response.json();
-        }).then((result) => {
-            console.log(result);
-            loadingText.classList.add("hidden");
+    document.getElementById('form').onsubmit = function(event) {
+        event.preventDefault() // prevent form from posting without JS
+        // building formdata
+        const formData = new FormData()
+        formData.append('uploaded_file', document.getElementById('uploaded_file').files[0])
+        // post data to server
+        fetch("convert", {
+            body: formData,
+            method: "POST"
+        })
+        .then((response) => response.json())
+        .then((result) => {
             if (result.success) {
-                alert("Successfully converted!");
+                if (confirm("Successfully converted to USDZ! Do want to download the file?")) {
+                    window.location.href = "download?file=" + result.outputPath;
+                }
             } else {
-                alert("Something went wrong.");
+                alert("Conversion failed");
             }
         });
-    })
+    }
 </script>
 </html>
